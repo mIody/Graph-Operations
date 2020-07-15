@@ -1,3 +1,7 @@
+// Simple graph class written in order to learn about graph traversals and sorting
+// Graph is directed
+// Assumption - labels are unique
+
 class Graph(var numberOfElements: Int, elements: ArrayList<String>) {
     var graphList = ArrayList<ArrayList<Vertex>>(numberOfElements)
     var vertexList = ArrayList<Vertex>(numberOfElements)
@@ -12,7 +16,8 @@ class Graph(var numberOfElements: Int, elements: ArrayList<String>) {
         }
     }
 
-    fun addVertex(vertex: Vertex) {
+    fun addVertex(label: String) {
+        val vertex = Vertex(label)
         graphList.add(ArrayList())
         vertexList.add(vertex)
         numberOfElements++
