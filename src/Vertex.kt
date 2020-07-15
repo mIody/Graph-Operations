@@ -1,3 +1,3 @@
-class Vertex(val label: String) {
-    val hasBeenVisited: Boolean = false
+class Vertex(var label: String) {
+    var hasBeenVisited: Boolean = false
 }
