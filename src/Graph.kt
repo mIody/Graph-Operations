@@ -2,9 +2,10 @@
 // Graph is directed
 // Assumption - labels are unique
 
-class Graph(var numberOfElements: Int, elements: ArrayList<String>) {
-    var graphList = ArrayList<ArrayList<Vertex>>(numberOfElements)
-    var vertexList = ArrayList<Vertex>(numberOfElements)
+class Graph(elements: ArrayList<String> = ArrayList(0)) {
+    private var numberOfElements = elements.size
+    private var graphList = ArrayList<ArrayList<Vertex>>(numberOfElements)
+    private var vertexList = ArrayList<Vertex>(numberOfElements)
 
     init {
         for(i in 0 until numberOfElements) {
@@ -23,9 +24,9 @@ class Graph(var numberOfElements: Int, elements: ArrayList<String>) {
         numberOfElements++
     }
 
-    private fun findIndex(label: String): Int {
+    private fun findIndex(l: String): Int {
         for ((index, vertex) in vertexList.withIndex()) {
-            if(vertex.label == label){
+            if(vertex.label == l){
                 return index
             }
         }
@@ -35,6 +36,12 @@ class Graph(var numberOfElements: Int, elements: ArrayList<String>) {
     fun addEdge(label1: String, label2: String) {
         val index = findIndex(label1)
         graphList[index].add(vertexList[findIndex(label2)])
+    }
+
+    private fun clear() {
+        for(vertex in vertexList) {
+            vertex.hasBeenVisited = false
+        }
     }
 
     fun bfs(label: String) {
@@ -54,34 +61,71 @@ class Graph(var numberOfElements: Int, elements: ArrayList<String>) {
             queue.removeFirst()
             workVertex = queue.firstOrNull()
         }
+
+        clear()
+    }
+
+    fun dfs(label: String) {
+        var check: Boolean
+        val stack = ArrayDeque<Vertex>(numberOfElements)
+        var workIndex = findIndex(label)
+        var workVertex: Vertex = vertexList[workIndex]
+        stack.addLast(workVertex)
+
+        while(stack.isNotEmpty()) {
+            workVertex = stack.last()
+            workIndex = findIndex(workVertex.label)
+            check = true
+            if(!workVertex.hasBeenVisited) {
+                println(workVertex.label)
+                workVertex.hasBeenVisited = true
+            }
+            for(element in graphList[workIndex]) {
+                if(!element.hasBeenVisited) {
+                    stack.addLast(element)
+                    check = false
+                    break
+                }
+            }
+
+            if(check) {
+                stack.removeLast()
+            }
+        }
+
+        clear()
     }
 }
 
 fun main() {
-    val a = ArrayList<String>(2)
-    val ver1 = "0"
-    val ver2 = "1"
-    val ver3 = "2"
-    val ver4 = "3"
-    val ver5 = "4"
-    val ver6 = "5"
-    a.add(ver1)
-    a.add(ver2)
-    a.add(ver3)
-    a.add(ver4)
-    a.add(ver5)
-    a.add(ver6)
-    val g = Graph(6, a)
-    g.addEdge(ver1, ver2)
-    g.addEdge(ver2, ver1)
-    g.addEdge(ver1, ver3)
-    g.addEdge(ver2, ver4)
-    g.addEdge(ver3, ver4)
-    g.addEdge(ver2, ver1)
-    g.addEdge(ver4, ver5)
-    g.addEdge(ver5, ver4)
-    g.addEdge(ver5, ver3)
-    g.addEdge(ver3, ver6)
-    g.addEdge(ver6, ver5)
-    g.bfs("0")
+    val gr = Graph()
+    val v1 = "1"
+    val v2 = "2"
+    val v3 = "3"
+    val v4 = "4"
+    val v5 = "5"
+    val v6 = "6"
+    val v7 = "7"
+    val v8 = "8"
+    val v9 = "9"
+    gr.addVertex(v1)
+    gr.addVertex(v2)
+    gr.addVertex(v3)
+    gr.addVertex(v4)
+    gr.addVertex(v5)
+    gr.addVertex(v6)
+    gr.addVertex(v7)
+    gr.addVertex(v8)
+    gr.addVertex(v9)
+    gr.addEdge(v1, v2)
+    gr.addEdge(v2, v3)
+    gr.addEdge(v3, v4)
+    gr.addEdge(v1, v5)
+    gr.addEdge(v1, v6)
+    gr.addEdge(v6, v7)
+    gr.addEdge(v7, v8)
+    gr.addEdge(v1, v9)
+    gr.dfs("1")
+    println()
+    gr.bfs("1")
 }
